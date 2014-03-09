@@ -75,6 +75,14 @@ $(info )
 
 all: vectorAdd_sample matrixMul_sample
 
+all_1: \
+	vectorAdd_sample
+
+all_2: \
+	matrixMul_sample
+
+all_3:	
+
 vectorAdd_sample:
 	$(call chdir,samples/0_simple/vectorAdd)
 	JAVA_HEAP_SIZE=8096m $(EMCCDEBUG)=1 $(CC) $(MODE) \
