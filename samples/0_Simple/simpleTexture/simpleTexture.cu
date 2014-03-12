@@ -213,7 +213,7 @@ void runTest(int argc, char **argv)
 
     // Warmup
     #ifdef __EMSCRIPTEN__
-    cudaRunKernelDimTemp<float*,unsigned int,unsigned int, float>("transformKernel", transformKernel, "", dimGrid, dimBlock , 4, dData, width, height, angle);
+    cudaRunKernelDim4<float*,unsigned int,unsigned int, float>("transformKernel", transformKernel, "", dimGrid, dimBlock , 4, dData, width, height, angle);
     #else
     transformKernel<<<dimGrid, dimBlock, 0>>>(dData, width, height, angle);
     #endif
