@@ -85,14 +85,14 @@ all_3:
 
 vectorAdd_sample:
 	$(call chdir,samples/0_simple/vectorAdd)
-	JAVA_HEAP_SIZE=8096m $(EMCCDEBUG)=1 $(CC) $(MODE) \
+	JAVA_HEAP_SIZE=8096m $(EMCCDEBUG)=1 $(CXX) $(MODE) \
 		vectorAdd.cu \
 	-I$(CUDA_ROOT)/include \
 	-o ../../../build/$(PREFIX)cud_vectorAdd.js
 
 matrixMul_sample:
 	$(call chdir,samples/0_simple/matrixMul)
-	JAVA_HEAP_SIZE=8096m $(EMCCDEBUG)=1 $(CC) $(MODE) \
+	JAVA_HEAP_SIZE=8096m $(EMCCDEBUG)=1 $(CXX) $(MODE) \
 		matrixMul.cu \
 	-I$(CUDA_ROOT)/include \
 	-I$(CUDA_ROOT)/samples/common/inc \
@@ -100,7 +100,7 @@ matrixMul_sample:
 
 simpleTexture_sample:
 	$(call chdir,samples/0_simple/simpleTexture)
-	JAVA_HEAP_SIZE=8096m $(EMCCDEBUG)=1 $(CC) $(MODE) \
+	JAVA_HEAP_SIZE=8096m $(EMCCDEBUG)=1 $(CXX) $(MODE) \
 		simpleTexture.cu \
 	-I$(CUDA_ROOT)/include \
 	-I$(CUDA_ROOT)/samples/common/inc \
@@ -111,7 +111,7 @@ simpleTexture_sample:
 
 simpleCubemapTexture_sample:
 	$(call chdir,samples/0_simple/simpleCubemapTexture)
-	JAVA_HEAP_SIZE=8096m $(EMCCDEBUG)=1 $(CC) $(MODE) \
+	JAVA_HEAP_SIZE=8096m $(EMCCDEBUG)=1 $(CXX) $(MODE) \
 		simpleCubemapTexture.cu \
 	-I$(CUDA_ROOT)/include \
 	-I$(CUDA_ROOT)/samples/common/inc \
@@ -119,7 +119,7 @@ simpleCubemapTexture_sample:
 
 simplePrintf_sample:
 	$(call chdir,samples/0_simple/simplePrintf)
-	JAVA_HEAP_SIZE=8096m $(EMCCDEBUG)=1 $(CC) $(MODE) \
+	JAVA_HEAP_SIZE=8096m $(EMCCDEBUG)=1 $(CXX) $(MODE) \
 		cuPrintf.cu \
 		simplePrintf.cu \
 	-I$(CUDA_ROOT)/include \
@@ -128,7 +128,7 @@ simplePrintf_sample:
 
 bandwidthTest_sample:
 	$(call chdir,samples/1_Utilities/bandwidthTest)
-	JAVA_HEAP_SIZE=8096m $(EMCCDEBUG)=1 $(CC) $(MODE) \
+	JAVA_HEAP_SIZE=8096m $(EMCCDEBUG)=1 $(CXX) $(MODE) \
 		bandwidthTest.cu \
 	-I$(CUDA_ROOT)/include \
 	-I$(CUDA_ROOT)/samples/common/inc \

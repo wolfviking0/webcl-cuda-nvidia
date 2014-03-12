@@ -51,7 +51,11 @@ const char *sampleName = "simpleTexture";
 const float angle = 0.5f;        // angle to rotate image by (in radians)
 
 // Texture reference for 2D float texture
+#ifdef __EMSCRIPTEN__
+texture tex;
+#else
 texture<float, 2, cudaReadModeElementType> tex;
+#endif
 
 // Auto-Verification Code
 bool testResult = true;
@@ -60,6 +64,12 @@ bool testResult = true;
 //! Transform an image using texture lookups
 //! @param outputData  output data in global memory
 ////////////////////////////////////////////////////////////////////////////////
+#ifdef __EMSCRIPTEN__
+#include <cuda/emcuda.h>
+ 
+#define STRINGIGY(a) #a
+const char * transformKernel = STRINGIGY(
+#endif
 __global__ void transformKernel(float *outputData,
                                 int width,
                                 int height,
@@ -81,6 +91,9 @@ __global__ void transformKernel(float *outputData,
     // read from texture and write to global memory
     outputData[y*width + x] = tex2D(tex, tu, tv);
 }
+#ifdef __EMSCRIPTEN__
+);
+#endif
 
 ////////////////////////////////////////////////////////////////////////////////
 // Declaration, forward
@@ -199,7 +212,11 @@ void runTest(int argc, char **argv)
     dim3 dimGrid(width / dimBlock.x, height / dimBlock.y, 1);
 
     // Warmup
+    #ifdef __EMSCRIPTEN__
+    cudaRunKernelDimTemp<float*,unsigned int,unsigned int, float>("transformKernel", transformKernel, "", dimGrid, dimBlock , 4, dData, width, height, angle);
+    #else
     transformKernel<<<dimGrid, dimBlock, 0>>>(dData, width, height, angle);
+    #endif
 
     checkCudaErrors(cudaDeviceSynchronize());
     StopWatchInterface *timer = NULL;
@@ -207,7 +224,11 @@ void runTest(int argc, char **argv)
     sdkStartTimer(&timer);
 
     // Execute the kernel
+    #ifdef __EMSCRIPTEN__
+    //cudaRunKernelDim4("transformKernel", transformKernel, "", dimGrid, dimBlock , 4, dData, width, height, angle);
+    #else
     transformKernel<<<dimGrid, dimBlock, 0>>>(dData, width, height, angle);
+    #endif
 
     // Check if kernel execution generated an error
     getLastCudaError("Kernel execution failed");
