@@ -73,7 +73,7 @@ $(info )
 #----------------------------------------------------------------------------------------#
 #----------------------------------------------------------------------------------------#		
 
-all: vectorAdd_sample matrixMul_sample
+all: all_1 all_2 all_3
 
 all_1: \
 	vectorAdd_sample
@@ -97,6 +97,115 @@ matrixMul_sample:
 	-I$(CUDA_ROOT)/include \
 	-I$(CUDA_ROOT)/samples/common/inc \
 	-o ../../../build/$(PREFIX)cud_matrixMul.js
+
+simpleTexture_sample:
+	$(call chdir,samples/0_simple/simpleTexture)
+	JAVA_HEAP_SIZE=8096m $(EMCCDEBUG)=1 $(CC) $(MODE) \
+		simpleTexture.cu \
+	-I$(CUDA_ROOT)/include \
+	-I$(CUDA_ROOT)/samples/common/inc \
+	--preload-file data/lena_bw_out.pgm \
+	--preload-file data/lena_bw.pgm \
+	--preload-file data/ref_rotated.pgm \
+	-o ../../../build/$(PREFIX)cud_simpleTexture.js
+
+simpleCubemapTexture_sample:
+	$(call chdir,samples/0_simple/simpleCubemapTexture)
+	JAVA_HEAP_SIZE=8096m $(EMCCDEBUG)=1 $(CC) $(MODE) \
+		simpleCubemapTexture.cu \
+	-I$(CUDA_ROOT)/include \
+	-I$(CUDA_ROOT)/samples/common/inc \
+	-o ../../../build/$(PREFIX)cud_simpleCubemapTexture.js
+
+simplePrintf_sample:
+	$(call chdir,samples/0_simple/simplePrintf)
+	JAVA_HEAP_SIZE=8096m $(EMCCDEBUG)=1 $(CC) $(MODE) \
+		cuPrintf.cu \
+		simplePrintf.cu \
+	-I$(CUDA_ROOT)/include \
+	-I$(CUDA_ROOT)/samples/common/inc \
+	-o ../../../build/$(PREFIX)cud_simplePrintf.js
+
+bandwidthTest_sample:
+	$(call chdir,samples/1_Utilities/bandwidthTest)
+	JAVA_HEAP_SIZE=8096m $(EMCCDEBUG)=1 $(CC) $(MODE) \
+		bandwidthTest.cu \
+	-I$(CUDA_ROOT)/include \
+	-I$(CUDA_ROOT)/samples/common/inc \
+	-o ../../../build/$(PREFIX)cud_bandwidthTest.js
+
+deviceQuery_sample:
+	$(call chdir,samples/1_Utilities/deviceQuery)
+	JAVA_HEAP_SIZE=8096m $(EMCCDEBUG)=1 $(CXX) $(MODE) \
+		deviceQuery.cpp \
+	-I$(CUDA_ROOT)/include \
+	-I$(CUDA_ROOT)/samples/common/inc \
+	-o ../../../build/$(PREFIX)cud_deviceQuery.js
+
+deviceQueryDrv_sample:
+	$(call chdir,samples/1_Utilities/deviceQueryDrv)
+	JAVA_HEAP_SIZE=8096m $(EMCCDEBUG)=1 $(CXX) $(MODE) \
+		deviceQueryDrv.cpp \
+	-I$(CUDA_ROOT)/include \
+	-I$(CUDA_ROOT)/samples/common/inc \
+	-o ../../../build/$(PREFIX)cud_deviceQueryDrv.js
+
+simpleGL_sample:
+	$(call chdir,samples/2_Graphics/simpleGL)
+	JAVA_HEAP_SIZE=8096m $(EMCCDEBUG)=1 $(CXX) $(MODE) \
+		simpleGL.cpp \
+	-I$(CUDA_ROOT)/include \
+	-I$(CUDA_ROOT)/samples/common/inc \
+	-o ../../../build/$(PREFIX)cud_simpleGL.js
+
+bilateralFilter_sample:
+	$(call chdir,samples/3_Imaging/simpleGL)
+	JAVA_HEAP_SIZE=8096m $(EMCCDEBUG)=1 $(CXX) $(MODE) \
+		bilateral_kernel.cu \
+		bilateralFilter_cpu.cpp \
+		bilateralFilter.cpp \
+		bmploader.cpp \
+	-I$(CUDA_ROOT)/include \
+	-I$(CUDA_ROOT)/samples/common/inc \
+	--preload-file data/nature_monte.bmp \
+	--preload-file data/ref_05.ppm \
+	--preload-file data/ref_06.ppm \
+	--preload-file data/ref_07.ppm \
+	--preload-file data/ref_08.ppm \
+	-o ../../../build/$(PREFIX)cud_bilateralFilter.js
+
+MonteCarloMultiGPU_sample:
+	$(call chdir,samples/4_Finance/MonteCarloMultiGPU)
+	JAVA_HEAP_SIZE=8096m $(EMCCDEBUG)=1 $(CXX) $(MODE) \
+		MonteCarlo_gold.cpp \
+		MonteCarlo_kernel.cu \
+		MonteCarloMultiGPU.cpp \
+		multithreading.cpp \
+	-I$(CUDA_ROOT)/include \
+	-I$(CUDA_ROOT)/samples/common/inc \
+	-o ../../../build/$(PREFIX)cud_MonteCarloMultiGPU.js
+
+fluidsGL_sample:
+	$(call chdir,samples/5_Simulations/fluidsGL)
+	JAVA_HEAP_SIZE=8096m $(EMCCDEBUG)=1 $(CXX) $(MODE) \
+		fluidsGL_kernels.cu \
+		fluidsGL.cpp \
+	-I$(CUDA_ROOT)/include \
+	-I$(CUDA_ROOT)/samples/common/inc \
+	--preload-file data/ref_fluidsGL.ppm \
+	-o ../../../build/$(PREFIX)cud_fluidsGL.js
+
+oceanFFT_sample:
+	$(call chdir,samples/5_Simulations/oceanFFT)
+	JAVA_HEAP_SIZE=8096m $(EMCCDEBUG)=1 $(CXX) $(MODE) \
+		oceanFFT_kernel.cu \
+		oceanFFT.cpp \
+	-I$(CUDA_ROOT)/include \
+	-I$(CUDA_ROOT)/samples/common/inc \
+	--preload-file data/ocean.frag \
+	--preload-file data/ocean.vert \
+	--preload-file data/reference.ppm \
+	-o ../../../build/$(PREFIX)cud_oceanFFT.js
 
 clean:
 	$(call chdir,build/)
