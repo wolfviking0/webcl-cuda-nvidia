@@ -41,6 +41,16 @@
  */
 #ifdef __EMSCRIPTEN__
 #include <cuda/emcuda.h>
+
+struct KernelParams {
+    int numArgs;
+    int typeArgs[5];
+    float *C;
+    float *A;
+    float *B;
+    int wA;
+    int wB;
+};
  
 #define STRINGIGY(a) #a
 const char * matrixMulCUDA = STRINGIGY(
@@ -215,14 +225,27 @@ int matrixMultiply(int argc, char **argv, int block_size, dim3 &dimsA, dim3 &dim
     printf("Computing result using CUDA Kernel...\n");
 
     #ifdef __EMSCRIPTEN__
+    struct KernelParams funcParams;
+    funcParams.numArgs = 5;
+    funcParams.typeArgs[0] = CUDA_POINTER;
+    funcParams.typeArgs[1] = CUDA_POINTER;
+    funcParams.typeArgs[2] = CUDA_POINTER;
+    funcParams.typeArgs[3] = CUDA_INT;
+    funcParams.typeArgs[4] = CUDA_INT;
+    funcParams.C = d_C;
+    funcParams.A = d_A;
+    funcParams.B = d_B;
+    funcParams.wA = dimsA.x;
+    funcParams.wB = dimsB.x;
+
     // Performs warmup operation using matrixMul CUDA kernel
     if (block_size == 16)
     {
-        cudaRunKernelDim5("matrixMulCUDA", matrixMulCUDA, "-DBLOCK_SIZE=16", grid, threads , 5, d_C, d_A, d_B, (void*)dimsA.x, (void*)dimsB.x);
+        cudaRunKernelDimFunc("matrixMulCUDA", matrixMulCUDA, "-DBLOCK_SIZE=16", grid, threads , funcParams);
     }
     else
     {
-        cudaRunKernelDim5("matrixMulCUDA", matrixMulCUDA, "-DBLOCK_SIZE=32", grid, threads , 5, d_C, d_A, d_B, (void*)dimsA.x, (void*)dimsB.x);
+        cudaRunKernelDimFunc("matrixMulCUDA", matrixMulCUDA, "-DBLOCK_SIZE=16", grid, threads , funcParams);
     }
     #else
     // Performs warmup operation using matrixMul CUDA kernel
@@ -274,13 +297,27 @@ int matrixMultiply(int argc, char **argv, int block_size, dim3 &dimsA, dim3 &dim
     for (int j = 0; j < nIter; j++)
     {
         #ifdef __EMSCRIPTEN__
+        struct KernelParams funcParams;
+        funcParams.numArgs = 5;
+        funcParams.typeArgs[0] = CUDA_POINTER;
+        funcParams.typeArgs[1] = CUDA_POINTER;
+        funcParams.typeArgs[2] = CUDA_POINTER;
+        funcParams.typeArgs[3] = CUDA_INT;
+        funcParams.typeArgs[4] = CUDA_INT;
+        funcParams.C = d_C;
+        funcParams.A = d_A;
+        funcParams.B = d_B;
+        funcParams.wA = dimsA.x;
+        funcParams.wB = dimsB.x;
+
+        // Performs warmup operation using matrixMul CUDA kernel
         if (block_size == 16)
         {
-            cudaRunKernelDim5("matrixMulCUDA", matrixMulCUDA, "-DBLOCK_SIZE=16", grid, threads , 5, d_C, d_A, d_B, (void*)dimsA.x, (void*)dimsB.x);
+            cudaRunKernelDimFunc("matrixMulCUDA", matrixMulCUDA, "-DBLOCK_SIZE=16", grid, threads , funcParams);
         }
         else
         {
-            cudaRunKernelDim5("matrixMulCUDA", matrixMulCUDA, "-DBLOCK_SIZE=32", grid, threads , 5, d_C, d_A, d_B, (void*)dimsA.x, (void*)dimsB.x);
+            cudaRunKernelDimFunc("matrixMulCUDA", matrixMulCUDA, "-DBLOCK_SIZE=16", grid, threads , funcParams);
         }
         #else
         if (block_size == 16)

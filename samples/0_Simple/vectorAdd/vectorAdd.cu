@@ -32,6 +32,15 @@
  */
 #ifdef __EMSCRIPTEN__
 #include <cuda/emcuda.h>
+
+struct KernelParams {
+    int numArgs;
+    int typeArgs[4];
+    float *A;
+    float *B;
+    float *C;
+    int numElements;
+};
  
 #define STRINGIGY(a) #a
 const char * vectorAdd = STRINGIGY(
@@ -140,7 +149,20 @@ main(void)
     int blocksPerGrid =(numElements + threadsPerBlock - 1) / threadsPerBlock;
     printf("CUDA kernel launch with %d blocks of %d threads\n", blocksPerGrid, threadsPerBlock);
     #ifdef __EMSCRIPTEN__
-    cudaRunKernel4("vectorAdd", vectorAdd, "", blocksPerGrid, threadsPerBlock , 4, d_A, d_B, d_C, (void*)numElements);
+
+    struct KernelParams funcParams;
+    funcParams.numArgs = 4;
+    funcParams.typeArgs[0] = CUDA_POINTER;
+    funcParams.typeArgs[1] = CUDA_POINTER;
+    funcParams.typeArgs[2] = CUDA_POINTER;
+    funcParams.typeArgs[3] = CUDA_INT;
+    funcParams.A = d_A;
+    funcParams.B = d_B;
+    funcParams.C = d_C;
+    funcParams.numElements = numElements;
+
+    cudaRunKernelFunc("vectorAdd", vectorAdd, "", blocksPerGrid, threadsPerBlock, funcParams);
+
     #else
     vectorAdd<<<blocksPerGrid, threadsPerBlock>>>(d_A, d_B, d_C, numElements);
     #endif
