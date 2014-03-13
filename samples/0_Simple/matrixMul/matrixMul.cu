@@ -218,11 +218,11 @@ int matrixMultiply(int argc, char **argv, int block_size, dim3 &dimsA, dim3 &dim
     // Performs warmup operation using matrixMul CUDA kernel
     if (block_size == 16)
     {
-        cudaRunKernelDim5<float*,float*,float*,int,int>("matrixMulCUDA", matrixMulCUDA, "-DBLOCK_SIZE=16", grid, threads , 5, d_C, d_A, d_B, dimsA.x, dimsB.x);
+        cudaRunKernelDim5("matrixMulCUDA", matrixMulCUDA, "-DBLOCK_SIZE=16", grid, threads , 5, d_C, d_A, d_B, (void*)dimsA.x, (void*)dimsB.x);
     }
     else
     {
-        cudaRunKernelDim5<float*,float*,float*,int,int>("matrixMulCUDA", matrixMulCUDA, "-DBLOCK_SIZE=32", grid, threads , 5, d_C, d_A, d_B, dimsA.x, dimsB.x);
+        cudaRunKernelDim5("matrixMulCUDA", matrixMulCUDA, "-DBLOCK_SIZE=32", grid, threads , 5, d_C, d_A, d_B, (void*)dimsA.x, (void*)dimsB.x);
     }
     #else
     // Performs warmup operation using matrixMul CUDA kernel
@@ -276,11 +276,11 @@ int matrixMultiply(int argc, char **argv, int block_size, dim3 &dimsA, dim3 &dim
         #ifdef __EMSCRIPTEN__
         if (block_size == 16)
         {
-            cudaRunKernelDim5<float*,float*,float*,int,int>("matrixMulCUDA", matrixMulCUDA, "-DBLOCK_SIZE=16", grid, threads , 5, d_C, d_A, d_B, dimsA.x, dimsB.x);
+            cudaRunKernelDim5("matrixMulCUDA", matrixMulCUDA, "-DBLOCK_SIZE=16", grid, threads , 5, d_C, d_A, d_B, (void*)dimsA.x, (void*)dimsB.x);
         }
         else
         {
-            cudaRunKernelDim5<float*,float*,float*,int,int>("matrixMulCUDA", matrixMulCUDA, "-DBLOCK_SIZE=32", grid, threads , 5, d_C, d_A, d_B, dimsA.x, dimsB.x);
+            cudaRunKernelDim5("matrixMulCUDA", matrixMulCUDA, "-DBLOCK_SIZE=32", grid, threads , 5, d_C, d_A, d_B, (void*)dimsA.x, (void*)dimsB.x);
         }
         #else
         if (block_size == 16)

@@ -140,7 +140,7 @@ main(void)
     int blocksPerGrid =(numElements + threadsPerBlock - 1) / threadsPerBlock;
     printf("CUDA kernel launch with %d blocks of %d threads\n", blocksPerGrid, threadsPerBlock);
     #ifdef __EMSCRIPTEN__
-    cudaRunKernel4<float*,float*,float*,int>("vectorAdd", vectorAdd, "", blocksPerGrid, threadsPerBlock , 4, d_A, d_B, d_C, numElements);
+    cudaRunKernel4("vectorAdd", vectorAdd, "", blocksPerGrid, threadsPerBlock , 4, d_A, d_B, d_C, (void*)numElements);
     #else
     vectorAdd<<<blocksPerGrid, threadsPerBlock>>>(d_A, d_B, d_C, numElements);
     #endif
