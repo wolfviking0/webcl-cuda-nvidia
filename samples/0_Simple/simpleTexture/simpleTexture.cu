@@ -50,13 +50,6 @@ const char *sampleName = "simpleTexture";
 // Constants
 const float angle = 0.5f;        // angle to rotate image by (in radians)
 
-// Texture reference for 2D float texture
-#ifdef __EMSCRIPTEN__
-texture tex;
-#else
-texture<float, 2, cudaReadModeElementType> tex;
-#endif
-
 // Auto-Verification Code
 bool testResult = true;
 
@@ -66,7 +59,10 @@ bool testResult = true;
 ////////////////////////////////////////////////////////////////////////////////
 #ifdef __EMSCRIPTEN__
 #include <cuda/emcuda.h>
- 
+
+// Texture reference for 2D float texture
+texture tex;
+
 #define STRINGIGY(a) #a
 const char * transformKernel = STRINGIGY(
 #endif
@@ -93,6 +89,11 @@ __global__ void transformKernel(float *outputData,
 }
 #ifdef __EMSCRIPTEN__
 );
+#endif
+
+#ifndef __EMSCRIPTEN__
+// Texture reference for 2D float texture
+texture<float, 2, cudaReadModeElementType> tex;
 #endif
 
 ////////////////////////////////////////////////////////////////////////////////
