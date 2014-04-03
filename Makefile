@@ -33,8 +33,8 @@ EMSCRIPTEN_ROOT:=$(CURRENT_ROOT)/../webcl-translator/emscripten
 ifeq ($(NAT),1)
 $(info ************ NATIVE : CUDA             ************)
 
-CXX = nvcc
-CC  = nvcc
+CXX = $(CUDA_ROOT)bin/nvcc
+CC  = $(CUDA_ROOT)bin/nvcc
 
 BUILD_FOLDER = $(CURRENT_ROOT)/bin/
 EXTENSION = .out
